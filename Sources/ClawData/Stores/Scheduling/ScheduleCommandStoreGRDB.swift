@@ -1,0 +1,46 @@
+import ClawCore
+import Foundation
+import GRDB
+
+/// The `/schedule` arm commit — the 3a remember-confirm composition (claim + effect + audit in
+/// ONE transaction, `MemoryCommandStoreGRDB` pattern) applied to job creation. A replayed `yes`
+/// fails the claim and creates nothing.
+public struct ScheduleCommandStoreGRDB: ScheduleCommandStore {
+  private let database: MappedDatabase
+
+  public init(writer: any DatabaseWriter) {
+    database = MappedDatabase(writer: writer)
+  }
+
+  public func applyArm(
+    updateId: Int64,
+    job: NewScheduledJob,
+    now: Date
+  ) throws(StoreError) -> ScheduleArmResult {
+    try database.writeMapping { db in
+      let newlyClaimed = try ProcessedUpdateStoreGRDB.claimUpdate(
+        db: db,
+        updateId: updateId,
+        claimedAt: now
+      )
+      guard newlyClaimed else {
+        return ScheduleArmResult(newlyClaimed: false, job: nil)
+      }
+
+      let stored = try ScheduledJobStoreGRDB.insertJob(db, job, now: now)
+
+      try AuditLogGRDB.insertAudit(
+        db,
+        AuditEvent(
+          actor: .owner,
+          action: .jobCreated,
+          argsRedacted: "/schedule",
+          decision: "armed job \(stored.id)",
+          ts: now
+        )
+      )
+
+      return ScheduleArmResult(newlyClaimed: true, job: stored)
+    }
+  }
+}

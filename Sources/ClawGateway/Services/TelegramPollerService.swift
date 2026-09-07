@@ -1,0 +1,115 @@
+import ClawCore
+import Logging
+import ServiceLifecycle
+
+/// The long-poll loop. Each batch runs through the router; the offset advances LAST and only
+/// for durably-handled updates, so a transient failure re-polls instead of acking a lost echo.
+/// Graceful shutdown cancels the task → the in-flight long poll unwinds and the loop exits.
+public struct TelegramPollerService: Service {
+  private let intake: any ChannelIntake
+  private let router: MessageRouter
+
+  private let cursor: any UpdateCursorStore
+
+  private let pollTimeout: Int
+
+  private let logger: Logger
+  private let clock: any Clock<Duration>
+
+  /// Re-sent on every call: omitting it would reuse the previous server-side setting. Approval
+  /// inline buttons are delivered as `callback_query`, so it joins direct messages and edits — the
+  /// callback branch in `MessageRouter` handles them ahead of `normalize`. `my_chat_member` is
+  /// asked for by name because Telegram never sends it otherwise, and being added to a room is the
+  /// only moment that room's chat id is announced to an operator who has to configure it.
+  private static let allowedUpdates = [
+    "message", "edited_message", "callback_query", "my_chat_member",
+  ]
+
+  /// Back-off windows that stop a persistent fault from becoming a tight re-poll loop.
+  private enum Backoff {
+    static let transientFailure = Duration.seconds(2)
+    static let conflict = Duration.seconds(10)
+    static let otherError = Duration.seconds(3)
+    static let storageFull = Duration.seconds(60)
+  }
+
+  public init(
+    intake: any ChannelIntake,
+    router: MessageRouter,
+    cursor: any UpdateCursorStore,
+    pollTimeout: Int,
+    logger: Logger,
+    clock: any Clock<Duration> = ContinuousClock()
+  ) {
+    self.intake = intake
+    self.router = router
+
+    self.cursor = cursor
+
+    self.pollTimeout = pollTimeout
+
+    self.logger = logger
+    self.clock = clock
+  }
+
+  public func run() async throws {
+    logger.info("telegram poller starting")
+    try await cancelWhenGracefulShutdown {
+      while !Task.isCancelled {
+        do {
+          let offset = try cursor.loadCursor().map { $0 + 1 }
+          let updates = try await intake.getUpdates(
+            offset: offset,
+            timeout: pollTimeout,
+            allowedUpdates: Self.allowedUpdates
+          )
+          batch: for rawUpdate in updates {
+            switch await router.handle(rawUpdate: rawUpdate) {
+            case .processed, .skipped:
+              try cursor.advanceCursor(to: rawUpdate.updateId)
+            case .transientFailure:
+              // Leave the offset untouched and re-poll the same window; the synchronous
+              // claim dedups the redelivery. Stop the batch so later updates don't jump ahead.
+              logger.warning(
+                "transient failure on update \(rawUpdate.updateId); re-polling, not advancing"
+              )
+              try? await clock.sleep(for: Backoff.transientFailure)
+              break batch
+            case .storageFull:
+              // Disk full: the user already got the notice. Back off long and don't advance, so we
+              // re-poll once there's room rather than acking an update we couldn't durably handle.
+              logger.error(
+                "storage full on update \(rawUpdate.updateId); backing off, not advancing"
+              )
+              try? await clock.sleep(for: Backoff.storageFull)
+              break batch
+            }
+          }
+        } catch is CancellationError {
+          break
+        } catch let error as TelegramError {
+          try await react(to: error)
+        } catch {
+          logger.error("poll loop error: \(error)")
+          try? await clock.sleep(for: Backoff.otherError)
+        }
+      }
+    }
+    logger.info("telegram poller stopped")
+  }
+
+  private func react(to error: TelegramError) async throws {
+    switch error {
+    case .conflict409(let description):
+      // The single-instance flock should prevent this locally; loud + bounded back-off otherwise.
+      logger.critical("409 Conflict — another getUpdates consumer is active: \(description)")
+      try? await clock.sleep(for: Backoff.conflict)
+    case .floodControl(let retryAfter):
+      logger.warning("429 flood control; backing off \(retryAfter)s")
+      try? await clock.sleep(for: .seconds(retryAfter))
+    case .apiError, .transport, .decoding:
+      logger.error("telegram error: \(error)")
+      try? await clock.sleep(for: Backoff.otherError)
+    }
+  }
+}
