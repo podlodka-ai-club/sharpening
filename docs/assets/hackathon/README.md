@@ -4,7 +4,7 @@ Four figures for the submission README, authored with the `diagram-design` skill
 
 | Figure | Purpose | Canvas |
 |---|---|---|
-| `hero` | Product identity and sprint context | 960 × 360 |
+| `hero` | Product identity and sprint context | 960 × 316 |
 | `learning-loop` | Run → evidence → evaluation → optional learning → next run | 960 × 800 |
 | `learning-policy` | Candidate admission, bounded trial, promotion, fallback and waiting | 960 × 816 |
 | `architecture` | Execution, authenticated owner feedback, background learning and persistence | 960 × 736 |
