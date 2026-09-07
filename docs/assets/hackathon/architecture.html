@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Архитектура самообучения</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500&amp;family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0;background:#F7F5EF;color:#252922;font-family:'Manrope',Arial,sans-serif}main{width:960px;max-width:100%;margin:auto}svg{display:block;width:100%;height:auto}</style>
+</head>
+<body>
+<main>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 736" width="960" height="736" role="img" aria-labelledby="architecture-title architecture-desc">
+<title id="architecture-title">Два контура одного ассистента</title>
+<desc id="architecture-desc">Telegram управляет агентом, планировщик запускает регулярные задачи. Agent runtime вызывает LLM и инструменты, затем передаёт завершённые факты фоновому learning workflow. SQLite хранит уроки и решения, которые читает следующий запуск.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="#596056"/>
+</marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="#C44D1F"/>
+</marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+<polygon points="0 0, 8 3, 0 6" fill="#3E6770"/>
+</marker>
+</defs>
+<rect x="0" y="0" width="960" height="736" rx="0" fill="#F7F5EF" stroke="none" />
+<text x="40" y="40" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#C44D1F" text-anchor="start" letter-spacing="1">03 / ARCHITECTURE</text>
+<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Ответ сейчас. Обучение — следом.</text>
+<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Один Swift-демон на вашей машине. Learning не задерживает доставку результата.</text>
+<path class="connector" d="M 248 228 H 288" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path class="connector" d="M 248 420 H 256 Q 264 420 264 412 V 260 Q 264 252 272 252 H 288" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path class="connector" d="M 648 228 H 736" fill="none" stroke="#3E6770" stroke-width="1.5" marker-end="url(#arrow-link)"/>
+<path class="connector" d="M 376 292 V 372" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path class="connector" d="M 560 292 V 372" fill="none" stroke="#596056" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<path class="connector" d="M 832 372 V 292" fill="none" stroke="#3E6770" stroke-width="1.5" marker-end="url(#arrow-link)"/>
+<path class="connector" d="M 716 484 V 548" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
+<path class="connector" d="M 488 548 V 328 Q 488 320 480 320 H 468 Q 460 320 460 312 V 292" fill="none" stroke="#596056" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<path class="connector" d="M 64 260 H 48 Q 40 260 40 268 V 508 Q 40 516 48 516 H 480 a 8 8 0 0 1 16 0 H 552 Q 560 516 560 508 V 484" fill="none" stroke="#596056" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+<rect x="176.0" y="484" width="160" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
+<text x="256" y="500" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >OWNER FEEDBACK</text>
+<rect x="592.0" y="320" width="88" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
+<text x="636" y="336" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >SETTLED</text>
+<rect x="720.0" y="504" width="72" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
+<text x="756" y="520" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >COMMIT</text>
+<g class="node" data-x="64" data-y="196" data-w="184" data-h="96">
+<rect x="64" y="196" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
+<text x="80" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Telegram</text>
+<text x="80" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >задачи и ответы</text>
+</g>
+<g class="node" data-x="288" data-y="196" data-w="360" data-h="96">
+<rect x="288" y="196" width="360" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
+<text x="304" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Agent runtime</text>
+<text x="304" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >контекст scheduled-запуска</text>
+<text x="304" y="276" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >точная версия уроков</text>
+</g>
+<g class="node" data-x="736" data-y="196" data-w="184" data-h="96">
+<rect x="736" y="196" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
+<text x="752" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >LLM provider</text>
+<text x="752" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >модель и маршрут</text>
+</g>
+<g class="node" data-x="64" data-y="372" data-w="184" data-h="96">
+<rect x="64" y="372" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
+<text x="80" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Планировщик</text>
+<text x="80" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >claim / fire</text>
+</g>
+<g class="node" data-x="288" data-y="372" data-w="176" data-h="96">
+<rect x="288" y="372" width="176" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
+<text x="304" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Инструменты</text>
+<text x="304" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >policy gate</text>
+</g>
+<g class="node" data-x="512" data-y="372" data-w="408" data-h="112">
+<rect x="512" y="372" width="408" height="112" rx="8" fill="#FBE9DC" stroke="#C44D1F" />
+<text x="528" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Learning workflow</text>
+<text x="528" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >evidence → evaluate → reflect</text>
+<text x="528" y="452" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >trial → promote / fallback</text>
+</g>
+<g class="node" data-x="288" data-y="548" data-w="632" data-h="96">
+<rect x="288" y="548" width="632" height="96" rx="8" fill="#252922" stroke="#DADCD2" />
+<text x="304" y="580" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#F7F5EF" text-anchor="start" >SQLite + GRDB</text>
+<text x="304" y="608" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#DADCD2" text-anchor="start" >уроки задачи · версии · факты · решения · происхождение</text>
+</g>
+<text x="40" y="664" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Уроки остаются недоверенными данными. Права инструментов задаёт код.</text>
+<line x1="40" y1="676" x2="920" y2="676" stroke="#DADCD2"/>
+<text x="40" y="704" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >ClawCore — контракты; clawd — сборка компонентов.</text>
+<text x="920" y="704" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="end" >Swift 6 · async / await</text>
+</svg>
+</main>
+</body>
+</html>

@@ -1,173 +1,233 @@
 <p align="center">
-  <img
-    src="docs/assets/branding/swift-claw-hero-dark-1400x700.png"
-    alt="swift-claw — Your AI. Your machine. Always on."
-    width="100%"
-  />
+  <img src="docs/assets/hackathon/hero.svg" alt="swift-claw — регулярные задачи, которые учатся на ваших исправлениях" width="100%" />
 </p>
+
+**swift-claw — персональный AI-ассистент, который выполняет регулярные задачи и превращает ваши исправления в опыт для следующих запусков.**
+
+Вы общаетесь с ним в Telegram. Он работает на вашей машине, помнит контекст и выполняет задачи
+по расписанию. За хакатон добавлен цикл обучения: ассистент оценивает результат,
+выводит короткие уроки из обратной связи и проверяет их на следующих запусках.
+
+<p>
+  <a href="#results">Результаты</a> ·
+  <a href="#learning">Алгоритм обучения</a> ·
+  <a href="#architecture">Архитектура</a> ·
+  <a href="#run">Запустить</a> ·
+  <a href="https://github.com/podlodka-ai-club/sharpening/issues/1">Задачи хакатона</a>
+</p>
+
+Этот репозиторий — хакатонная версия [swift-claw](https://github.com/ivan-magda/swift-claw).
+В `main` находится код ветки самообучения; имя демона — **`clawd`**.
+[Dashboard проекта][dashboard] связывает этапы, решения и отчёты.
+
+## Одна задача. Несколько запусков. Накопленный опыт.
+
+Регулярная задача должна учитывать ваши требования и после завершения чата.
+Например, мониторинг страницы должен сообщать о существенном изменении цены,
+но не отвлекать вас каждым обновлением счётчика или времени доставки.
+
+Первый benchmark проверяет именно это: агент сравнивает две версии страницы,
+выделяет существенные изменения и прикладывает подтверждающие фрагменты.
+Вот **реальная пара ответов из эксперимента M3**:
+
+| На странице изменилось | Без урока | С выведенным уроком |
+|---|---|---|
+| Цена: **$12.99 → $9.99** | Сообщить | Сообщить |
+| Текущая оценка доставки: **25 → 18 минут** | Сообщить | Пропустить как изменчивый показатель |
+| Балл по фиксированной метрике | **85 / 100** | **100 / 100** |
+
+[Исходный ответ][example-clean] · [Ответ с уроком][example-trained] · [Сохранённый урок][candidate]
+
+Смысл урока: часто обновляемые показатели считать шумом, **кроме случаев, когда они отражают
+устойчивое изменение цены, доступности, обязательств или срока**. Это правило сохраняется
+у конкретной задачи и становится частью контекста будущих запусков.
+
+Механизм общий для повторяющихся задач. Мониторинг страниц — первый измеримый сценарий,
+на котором мы проверяли обучение; его результаты и границы приведены ниже.
+
+<a id="results"></a>
+
+## Что показали прогоны
+
+**В M3 кандидат улучшил результат на трёх парных проверках. Последующую проверку
+на новом примере он не прошёл.** Это два результата одного эксперимента.
+
+| Проверка | Наблюдение | Вывод |
+|---|---|---|
+| Три пары: чистый контекст → контекст с уроком | **85 → 100** в каждой паре; средний прирост **+15 баллов** | Урок исправил лишние срабатывания на этих примерах |
+| Проверка после promotion, active gate | **30 / 100** при пороге **90**; `material.missed` | На новом примере пропущено существенное изменение |
+| Проверка после перезапуска | **Не достигнута** | Этот эксперимент не подтверждает сохранение эффекта после restart |
+
+Источники: [три парных сравнения][pairs], [active gate][active], [итоговый JSON-отчёт M3][report].
+Итоговый статус прогона — `incomplete_failed`. Прирост на трёх парах не доказывает устойчивого
+улучшения на новых страницах.
+
+В этом прогоне рефлексию запустило **исправление владельца** (`owner_correction`).
+Сам evaluator на исходных запусках вернул `no_issue` и проблему не обнаружил:
+[решения алгоритма][decisions], [первая оценка][evaluation]. Поэтому результат демонстрирует
+обучение с обратной связью владельца; автономное выявление этой ошибки пока не показано.
+
+После эксперимента механизм был интегрирован в демон. Для **M4 проверены все 15 критериев
+приёмки на `d784bf91`**: [отчёт с доказательствами][acceptance]. Он подтверждает реализацию
+production loop и его контрактов. Живое сравнение чистого и обученного production-агента
+остаётся отдельной демонстрацией, которую этот отчёт не заменяет.
+
+<a id="learning"></a>
+
+## Как происходит обучение
 
 <p align="center">
-  <a href="https://github.com/ivan-magda/swift-claw/actions/workflows/ci.yml"><img src="https://github.com/ivan-magda/swift-claw/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/ivan-magda/swift-claw" alt="Release"></a>
-  <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-6.3-F05138?logo=swift&logoColor=white" alt="Swift 6.3"></a>
-  <a href="#install"><img src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux-blue" alt="Platforms: macOS | Linux"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+  <img src="docs/assets/hackathon/learning-loop.svg" alt="Цикл: запуск задачи, сохранение результата, оценка и обратная связь, формирование уроков, пробные запуски, принятие или отклонение" width="100%" />
 </p>
 
-**Your always-on personal AI assistant. One pure-Swift daemon on hardware you own.**
+1. **Выполнить задачу.** Запуск получает зафиксированную версию уроков и работает с ней до конца.
+2. **Оценить результат.** После завершения сохраняются evidence и оценка. Технический сбой
+   не превращается в отрицательную оценку качества.
+3. **Найти повторяющуюся проблему.** Два отрицательных результата с одинаковым кодом проблемы
+   могут запустить рефлексию. Одного исправления владельца достаточно для более быстрого старта.
+4. **Предложить уроки.** Модель формирует короткий набор правил для этой задачи.
+   Код проверяет размер, содержимое, происхождение и актуальность кандидата.
+5. **Проверить в работе.** Кандидат проходит ограниченный trial. По результатам он заменяет
+   стабильные уроки или отклоняется; решения и основания сохраняются.
 
-`clawd` pairs a private Telegram bot with the LLM of your choice. It remembers what you
-tell it and runs scheduled and proactive tasks. Consequential tool calls wait for your
-approval. Everything it keeps stays in one directory on your own machine: a SQLite
-database, encrypted secret envelopes, and Markdown files you edit by hand.
+**Обучение здесь — изменение памяти задачи.** Веса модели не меняются, fine-tuning не нужен.
+Версии уроков, оценки, обратная связь и решения живут в SQLite через GRDB.
+Внешний сервис памяти, включая xMemory, для этого не используется.
 
-## Features
+Evaluator работает без инструментов и не видит текст уроков, кандидата и состояние trial.
+Reflector получает совместимые результаты, стабильные уроки и обратную связь владельца.
+Так оценка и предложение изменений остаются разными этапами.
 
-- **A real Telegram chat.** Answers stream in as live message drafts. `/stop` cancels a
-  turn, `/new` starts a fresh session, clawd transcribes voice notes on-device
-  (macOS 26), and it looks at photos you send if your model can see them.
-- **Durable memory.** Facts you confirm persist in SQLite, and clawd recalls them by
-  importance and recency. Workspace Markdown files hold your profile, notes, and daily
-  logs, and conversation history is full-text searchable.
-- **Skills you write once.** A `skills/<name>/SKILL.md` file shows up in context as its name
-  and one line about when to use it; when a task matches, clawd loads the body and follows
-  your procedure instead of asking you to paste it again. Send `/skills` to see every
-  accepted skill and each file the scanner rejected.
-- **Proactive, on your clock.** "Every weekday at 07:00" schedules fire once per
-  occurrence across restarts and DST changes, and an opt-in heartbeat respects quiet hours.
-- **Scheduled tasks that learn from feedback.** Opt in with `CLAW_LEARNING_ENABLED=true`.
-  Correct one result to start a bounded lesson trial; two positive runs can promote it.
-  Inspect lessons and roll back a promotion with `/learning`.
-- **Tools behind a policy engine.** `web_fetch` sits behind an SSRF gate; writes and code
-  execution wait for an explicit tap-to-approve in Telegram. clawd enforces policy in
-  code and treats inbound content as data, never as instructions.
-- **Sandboxed code execution.** Untrusted code runs in a fresh disposable VM per request
-  (macOS 26 arm64, off by default).
-- **Tools from MCP servers.** List a server, store its token encrypted, and its tools join
-  the built-ins as the least-trusted tools clawd has. Calls ask by default; you may mark a
-  named tool safe, but the exfiltration gate can still require approval. Only you can add a
-  server or change what it exposes.
-- **Bring your own model.** Any OpenAI-compatible endpoint works, and `clawd auth login`
-  can run an eligible model on a ChatGPT subscription.
-- **One binary.** Swift 6 with strict concurrency, from the Telegram long-poll down to SQLite.
+## Когда урок становится постоянным
 
-## The approval card
-
-<p align="left">
-  <img
-    src="docs/assets/demo/card-deny.gif"
-    alt="A request to write a file pauses in Telegram: the approval card shows the fully-resolved target path, the size, and a preview, with Approve and Deny buttons. The user taps Deny and clawd writes nothing."
-    width="50%"
-  />
+<p align="center">
+  <img src="docs/assets/hackathon/learning-policy.svg" alt="Ограниченная проверка кандидата: до трёх запусков, два положительных результата для принятия, один отрицательный результат для отклонения, возможность отката" width="100%" />
 </p>
 
-A file write suspends the run until you answer. Every field on the card comes from the daemon's own
-record of the action: the target path after symlink and `..` resolution, the size, and a preview of
-the content. Tap Deny and clawd writes nothing.
-
-## Install
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/ivan-magda/swift-claw/main/install.sh | sh
-```
-
-Everything lands in `~/.swift-claw`, with no sudo. The script verifies every download
-against the release checksums, stages the service files, and prints the next steps.
-Pin a release with `curl … | CLAWD_VERSION=v0.2.0 sh`, read the
-[script source](install.sh) first, or follow the manual route in
-[docs/INSTALL.md](docs/INSTALL.md) (macOS 15+ arm64; Linux x86_64 with glibc 2.38+).
-
-Or build from source with a Swift 6.3 toolchain (Linux needs `libsqlite3-dev`):
-
-```bash
-git clone https://github.com/ivan-magda/swift-claw.git && cd swift-claw
-swift build -c release
-sudo install -m755 .build/release/clawd /usr/local/bin/clawd
-```
-
-## Quick start
-
-1. Get a bot token from [@BotFather](https://t.me/BotFather) (send `/newbot`).
-2. Edit `~/.swift-claw/clawd.env`: set the token and your LLM provider
-   (`CLAW_LLM_BASE_URL`, `CLAW_LLM_MODEL`, `CLAW_LLM_API_KEY`).
-3. Load the config and encrypt your secrets at rest:
-   `set -a && . ~/.swift-claw/clawd.env && set +a && clawd secrets seal`
-4. Say hello once in the foreground: `clawd run`, then send `/start` to your bot. The
-   refusal shows your numeric ID; set it as `CLAW_ALLOWLIST=<id>` in `clawd.env`, then
-   Ctrl-C.
-5. Check health and start the service:
-   `set -a && . ~/.swift-claw/clawd.env && set +a && clawd doctor`, then run the start
-   command doctor prints.
-
-The full walkthrough, including the ChatGPT-subscription route and troubleshooting, is
-in [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md).
-
-In Telegram, `/schedule` creates or lists jobs; `/runnow <jobId>` runs one now;
-`/pause`, `/resume`, and `/cancel` control a job. `/learning <jobId>` shows its lessons and
-trial, and `/learning reset <jobId>` asks you to confirm an empty lesson set. `/help` lists
-commands and confirmation rules.
-
-## Security model
-
-swift-claw assumes you are the only person it serves.
-
-- **Default-deny.** Only allowlisted Telegram IDs get a conversation. clawd refuses
-  everyone else, and answers `/start` with the sender's own numeric ID so you can
-  allowlist them. `CLAW_ALLOWLIST` only ever adds, so revoking an ID means deleting its
-  row from the database ([details](docs/CUSTOMIZATION.md#everything-else)).
-- **Secrets encrypted at rest.** `clawd secrets seal` wraps the bot token and API keys in
-  an AES-GCM envelope. Plaintext env secrets remain available as a dev fallback that
-  warns on every boot.
-- **Approvals are durable and unforgeable.** File writes, memory writes, and code
-  execution suspend into a durable state machine until you tap Approve in Telegram. A
-  forged or third-party callback cannot approve, and pending approvals expire to deny.
-- **Prompt injection contained.** Messages, web content, tool output, and stored memory
-  enter the context as untrusted data. Once a session has both ingested untrusted content
-  and pulled your private files into context, fetching an arbitrary URL also needs your
-  approval. clawd pins your LLM and search providers in config, and the model cannot
-  redirect them.
-
-The full model is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (§12). To report a
-vulnerability, see [SECURITY.md](SECURITY.md).
-
-## Customize your agent
-
-Persona and behavior live in Markdown files under `~/.swift-claw/workspace/`:
-
-| File | Shapes | Trust |
-|---|---|---|
-| `SOUL.md` | Personality and tone | System prompt |
-| `AGENTS.md` | Behavior rules | System prompt |
-| `TOOLS.md` | When and how to use tools | System prompt |
-| `USER.md` | Who you are | Untrusted, labeled |
-| `HEARTBEAT.md` | The proactive heartbeat checklist | Heartbeat runs only |
-| `skills/<name>/SKILL.md` | A procedure the agent loads when a task calls for it | Untrusted, labeled |
-
-MCP servers go in `~/.swift-claw/mcp.yaml`, with their tokens stored encrypted by
-`clawd mcp set-token`. Other runtime knobs are environment variables: the model route
-(`CLAW_LLM_MODEL`), an optional fallback route (`CLAW_LLM_FALLBACK_MODEL`, off unless you
-set it), USD budgets, schedules and quiet hours, voice locales, sandbox limits.
-[`.env.example`](.env.example) documents every variable;
-[docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) is the guide.
-
-## Documentation
-
-| You want to | Read |
+| Правило `scheduled-learning/v1` | Зачем оно нужно |
 |---|---|
-| Set it up end to end | [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md) |
-| Install, update, or uninstall | [docs/INSTALL.md](docs/INSTALL.md) |
-| Make it yours | [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md) |
-| Run it as a service | [docs/INSTALL.md](docs/INSTALL.md#4-running-as-a-service) |
-| Develop and test locally | [docs/LOCAL_DEV.md](docs/LOCAL_DEV.md) |
-| Understand the design | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
-| Report a vulnerability | [SECURITY.md](SECURITY.md) |
+| Последние **5 совместимых оценок за 30 дней** | Не смешивать результаты разных условий задачи |
+| До **3 уроков**, каждый до **512 UTF-8 байт** | Сохранять компактный опыт для следующих запусков |
+| Один trial на задачу, до **3 созданных запусков** | Ограничивать воздействие непроверенного изменения |
+| **2 положительных** результата, без отрицательных и veto | Принимать кандидата только после разрешения всех назначенных запусков |
+| **1 отрицательный** результат или hard veto | Завершать trial, сохраняя прежние стабильные уроки |
+| **30 дней** на назначения, **37 дней** на решение | Завершать trial даже при паузах и недостающих оценках |
 
-## Contributing
+Указанные сроки — верхние пределы: при достаточных результатах trial завершается раньше.
 
-Contributions are welcome. Open an issue to discuss what you have in mind before
-sending a pull request; [CONTRIBUTING.md](CONTRIBUTING.md) has the details and the
-lint/test gate.
+В Telegram владелец может отметить результат **Useful / Not useful**, внести исправление через
+**Correct it**, оспорить оценку, отредактировать или отклонить кандидата и откатить promotion.
+Одобрение кандидата не считается положительным результатом запуска.
 
-## License
+Уроки входят в контекст как недоверенные данные. Они не могут менять расписание, адресатов,
+модель, бюджеты или разрешения инструментов. Существующие policy engine и approval controls
+продолжают действовать. Решение о promotion эвристическое; наличие подтверждений владельца
+записывается отдельно.
+
+<a id="architecture"></a>
+
+## Как это устроено
+
+<p align="center">
+  <img src="docs/assets/hackathon/architecture.svg" alt="Telegram связан со Swift-демоном: gateway и scheduler запускают агент, learning workflow использует общие протоколы, LLM и хранилище GRDB с SQLite" width="100%" />
+</p>
+
+**`clawd` — один демон на Swift 6 со strict concurrency**, который работает на macOS и Linux.
+Telegram служит интерфейсом владельца; модели доступны через настраиваемый provider route.
+Состояние хранится локально, секреты шифруются на диске.
+
+| Часть системы | Ответственность | Код |
+|---|---|---|
+| `ClawCore` | Протоколы и типы: задачи, evidence, уроки, trial и решения | [Learning domain](Sources/ClawCore/Domain/Learning) |
+| `ClawAgent` | Выполнение задачи, контекст с закреплёнными уроками, LLM и инструменты | [Agent runtime](Sources/ClawAgent) |
+| `ClawGateway` | Telegram, расписания, обратная связь и координация learning workflow | [Learning services](Sources/ClawGateway/Services/Learning) |
+| `ClawData` | Транзакции, версии уроков, доказательства, promotion, rollback и retention | [Learning store](Sources/ClawData/Stores/Learning) |
+
+Домен и протоколы отделены от реализаций, зависимости собираются в корне `clawd`.
+Фиксация уроков на запуске, атомарные переходы и восстановление состояния обеспечивают
+предсказуемую работу при конкурентных событиях и перезапусках.
+
+**Экспериментальный контроллер написан на Python** и отделён от Swift-демона. Он задаёт
+фиксированные данные, порядок прогонов и детерминированный scorer. Эталонные ответы
+не передаются агенту вместе с заданием.
+[Архитектура](docs/ARCHITECTURE.md) · [Спецификация алгоритма][algorithm] · [Протокол M3][protocol]
+
+<a id="run"></a>
+
+## Запустить хакатонную версию
+
+Нужны **Swift 6.3**, macOS 15+ или Linux, Telegram-бот и доступ к LLM.
+На Linux для сборки установите `libsqlite3-dev`. Собирайте этот репозиторий из `main`:
+
+```bash
+git clone https://github.com/podlodka-ai-club/sharpening.git
+cd sharpening
+swift build -c release
+export PATH="$PWD/.build/release:$PATH"
+```
+
+[Настройте бота по инструкции](docs/GETTING_STARTED.md#2-configure): скопируйте конфигурацию
+из `.env.example`, укажите Telegram token и LLM route, запечатайте секреты и добавьте свой
+Telegram ID в `CLAW_ALLOWLIST`. Полный onboarding описывает каждый шаг.
+
+В `~/.swift-claw/clawd.env` включите обучение:
+
+```bash
+CLAW_LEARNING_ENABLED=true
+```
+
+Загрузите конфигурацию в shell и запустите демон:
+
+```bash
+set -a && source ~/.swift-claw/clawd.env && set +a
+clawd doctor --check-config
+clawd run
+```
+
+Learning выключен по умолчанию; изменение настройки требует перезапуска.
+Вычисления evaluator и reflector используют настроенную модель и общие лимиты расходов,
+включая лимит фоновых задач.
+Для обучения используйте личный диалог владельца с ботом.
+
+### Попробовать цикл в Telegram
+
+1. Создайте повторяющуюся задачу через `/schedule <описание задачи и расписания>`
+   и подтвердите её. `/schedule list` покажет `jobId`.
+2. Выполните `/runnow <jobId>`, нажмите **Correct it** под результатом
+   и ответьте, что нужно изменить.
+3. Откройте `/learning <jobId>`, чтобы увидеть уроки и состояние trial.
+4. Выполните следующие запуски через `/runnow <jobId>` и оцените результаты.
+   Положительные и отрицательные оценки участвуют в решении по правилам выше.
+5. После promotion кнопка **Roll back promotion** возвращает предыдущий набор уроков.
+   `/learning reset <jobId>` с подтверждением начинает новую эпоху с пустым набором.
+
+Это ручной сценарий знакомства с production loop. Записанные измерения M3 доступны
+[отдельно][report]. Reset прекращает активное использование уроков, сохраняя историю.
+
+## Документация и материалы
+
+| Что посмотреть | Ссылка |
+|---|---|
+| Ход работы и текущий статус | [Основная задача #1](https://github.com/podlodka-ai-club/sharpening/issues/1) · [Dashboard][dashboard] |
+| Исходный эксперимент и результаты | [Протокол][protocol] · [Парные проверки][pairs] · [Финальный отчёт][report] |
+| Production learning: дизайн и приёмка | [Design][production-design] · [M4: 15 критериев][acceptance] |
+| Настройка, обучение и команды владельца | [Getting started](docs/GETTING_STARTED.md) · [Customization](docs/CUSTOMIZATION.md#scheduled-learning) |
+| Остальные возможности swift-claw | [Обзор продукта](docs/PRD.md) · [Архитектура](docs/ARCHITECTURE.md) |
+| Установка сервиса и локальная разработка | [Install](docs/INSTALL.md) · [Local development](docs/LOCAL_DEV.md) · [Testing](docs/TESTING.md) |
+| Безопасность и участие в разработке | [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) |
 
 [MIT](LICENSE) © Ivan Magda
+
+[dashboard]: https://github.com/podlodka-ai-club/sharpening/issues/1#issuecomment-5575295475
+[acceptance]: https://github.com/podlodka-ai-club/sharpening/issues/6#issuecomment-5575298657
+[example-clean]: experiments/scheduled-task-learning/scheduled-learning-v1/results/task-attempts/task-2/result.json
+[example-trained]: experiments/scheduled-task-learning/scheduled-learning-v1/results/task-attempts/task-3/result.json
+[candidate]: experiments/scheduled-task-learning/scheduled-learning-v1/results/candidate.json
+[pairs]: experiments/scheduled-task-learning/scheduled-learning-v1/results/page-adapter-receipt.json
+[active]: experiments/scheduled-task-learning/scheduled-learning-v1/results/active-evidence.json
+[report]: experiments/scheduled-task-learning/scheduled-learning-v1/results/final-report.json
+[decisions]: experiments/scheduled-task-learning/scheduled-learning-v1/results/events/decision-receipts.json
+[evaluation]: experiments/scheduled-task-learning/scheduled-learning-v1/results/learning-calls/evaluator-task-0/result.json
+[algorithm]: docs/research/170-generic-scheduled-task-learning-algorithm.md
+[protocol]: docs/research/172-validation-protocol.md
+[production-design]: docs/ARCHITECTURE.md#141-scheduled-learning-terminal-decisions
