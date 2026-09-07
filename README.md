@@ -1,163 +1,163 @@
 <p align="center">
-  <img src="docs/assets/hackathon/hero.svg" alt="swift-claw — регулярные задачи, которые учатся на ваших исправлениях" width="100%" />
+  <img src="docs/assets/hackathon/hero.svg" alt="swift-claw — recurring tasks that learn from your corrections" width="100%" />
 </p>
 
-**swift-claw — персональный AI-ассистент, который выполняет регулярные задачи и превращает ваши исправления в опыт для следующих запусков.**
+**swift-claw is a personal AI assistant that runs recurring tasks and turns your corrections into experience for future runs.**
 
-Вы общаетесь с ним в Telegram. Он работает на вашей машине, помнит контекст и выполняет задачи
-по расписанию. За хакатон добавлен цикл обучения: ассистент оценивает результат,
-выводит короткие уроки из обратной связи и проверяет их на следующих запусках.
+You talk to it in Telegram. It runs on your machine, remembers context, and carries out tasks
+on a schedule. The hackathon contribution adds a learning loop: the assistant evaluates results,
+derives short lessons from feedback, and tests them on subsequent runs.
 
 <p>
-  <a href="#results">Результаты</a> ·
-  <a href="#learning">Алгоритм обучения</a> ·
-  <a href="#architecture">Архитектура</a> ·
-  <a href="#run">Запустить</a> ·
-  <a href="https://github.com/podlodka-ai-club/sharpening/issues/1">Задачи хакатона</a>
+  <a href="#results">Results</a> ·
+  <a href="#learning">Learning algorithm</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#run">Run it</a> ·
+  <a href="https://github.com/podlodka-ai-club/sharpening/issues/1">Hackathon issues</a>
 </p>
 
-Этот репозиторий — хакатонная версия [swift-claw](https://github.com/ivan-magda/swift-claw).
-В `main` находится код ветки самообучения; имя демона — **`clawd`**.
-[Dashboard проекта][dashboard] связывает этапы, решения и отчёты.
+This repository is the hackathon edition of [swift-claw](https://github.com/ivan-magda/swift-claw).
+Its `main` branch contains the self-learning code; the daemon is called **`clawd`**.
+The [project dashboard][dashboard] connects milestones, decisions, and reports.
 
-## Одна задача. Несколько запусков. Накопленный опыт.
+## One task. Several runs. Accumulated experience.
 
-Регулярная задача должна учитывать ваши требования и после завершения чата.
-Например, мониторинг страницы должен сообщать о существенном изменении цены,
-но не отвлекать вас каждым обновлением счётчика или времени доставки.
+A recurring task should remember your requirements after the conversation ends.
+For example, a page monitor should report a meaningful price change
+without distracting you every time a counter or delivery estimate updates.
 
-Первый benchmark проверяет именно это: агент сравнивает две версии страницы,
-выделяет существенные изменения и прикладывает подтверждающие фрагменты.
-Вот **реальная пара ответов из эксперимента M3**:
+The first benchmark tests exactly this: the agent compares two versions of a page,
+identifies material changes, and supplies supporting excerpts.
+Here is **an actual pair of responses from the M3 experiment**:
 
-| На странице изменилось | Без урока | С выведенным уроком |
+| What changed on the page | Without a lesson | With the derived lesson |
 |---|---|---|
-| Цена: **$12.99 → $9.99** | Сообщить | Сообщить |
-| Текущая оценка доставки: **25 → 18 минут** | Сообщить | Пропустить как изменчивый показатель |
-| Балл по фиксированной метрике | **85 / 100** | **100 / 100** |
+| Price: **$12.99 → $9.99** | Report | Report |
+| Current delivery estimate: **25 → 18 minutes** | Report | Ignore as a volatile indicator |
+| Score under the fixed metric | **85 / 100** | **100 / 100** |
 
-[Исходный ответ][example-clean] · [Ответ с уроком][example-trained] · [Сохранённый урок][candidate]
+[Original response][example-clean] · [Response with the lesson][example-trained] · [Saved lesson][candidate]
 
-Смысл урока: часто обновляемые показатели считать шумом, **кроме случаев, когда они отражают
-устойчивое изменение цены, доступности, обязательств или срока**. Это правило сохраняется
-у конкретной задачи и становится частью контекста будущих запусков.
+The lesson says to treat frequently refreshed indicators as noise, **unless they reflect
+a lasting change in price, availability, obligations, or a deadline**. The rule is stored
+for that specific task and becomes part of the context for future runs.
 
-Механизм общий для повторяющихся задач. Мониторинг страниц — первый измеримый сценарий,
-на котором мы проверяли обучение; его результаты и границы приведены ниже.
+The mechanism applies to recurring tasks in general. Page monitoring is the first measurable
+scenario used to test learning; its results and limitations are documented below.
 
 <a id="results"></a>
 
-## Что показали прогоны
+## What the runs showed
 
-**В M3 кандидат улучшил результат на трёх парных проверках. Последующую проверку
-на новом примере он не прошёл.** Это два результата одного эксперимента.
+**In M3, the candidate improved the score on three paired checks. It failed the subsequent
+check on a new example.** Both are findings from the same experiment.
 
-| Проверка | Наблюдение | Вывод |
+| Check | Observation | Finding |
 |---|---|---|
-| Три пары: чистый контекст → контекст с уроком | **85 → 100** в каждой паре; средний прирост **+15 баллов** | Урок исправил лишние срабатывания на этих примерах |
-| Проверка после promotion, active gate | **30 / 100** при пороге **90**; `material.missed` | На новом примере пропущено существенное изменение |
-| Проверка после перезапуска | **Не достигнута** | Этот эксперимент не подтверждает сохранение эффекта после restart |
+| Three pairs: clean context → context with a lesson | **85 → 100** in every pair; mean gain of **+15 points** | The lesson corrected false positives on these examples |
+| Post-promotion check, active gate | **30 / 100** against a threshold of **90**; `material.missed` | A material change was missed on a new example |
+| Check after restart | **Not reached** | This experiment does not establish that the effect survives a restart |
 
-Источники: [три парных сравнения][pairs], [active gate][active], [итоговый JSON-отчёт M3][report].
-Итоговый статус прогона — `incomplete_failed`. Прирост на трёх парах не доказывает устойчивого
-улучшения на новых страницах.
+Sources: [three paired comparisons][pairs], [active gate][active], [M3 final JSON report][report].
+The run ended with status `incomplete_failed`. Improvement on three pairs does not establish
+consistent improvement on new pages.
 
-В этом прогоне рефлексию запустило **исправление владельца** (`owner_correction`).
-Сам evaluator на исходных запусках вернул `no_issue` и проблему не обнаружил:
-[решения алгоритма][decisions], [первая оценка][evaluation]. Поэтому результат демонстрирует
-обучение с обратной связью владельца; автономное выявление этой ошибки пока не показано.
+In this run, an **owner correction** (`owner_correction`) triggered reflection.
+The evaluator returned `no_issue` on the initial runs and did not detect the problem:
+[algorithm decisions][decisions], [first evaluation][evaluation]. The result therefore demonstrates
+learning from owner feedback; autonomous detection of this error has not yet been demonstrated.
 
-После эксперимента механизм был интегрирован в демон. Для **M4 проверены все 15 критериев
-приёмки на `d784bf91`**: [отчёт с доказательствами][acceptance]. Он подтверждает реализацию
-production loop и его контрактов. Живое сравнение чистого и обученного production-агента
-остаётся отдельной демонстрацией, которую этот отчёт не заменяет.
+The mechanism was integrated into the daemon after the experiment. **All 15 M4 acceptance
+criteria were verified at `d784bf91`**: [report with evidence][acceptance]. This confirms the
+implementation of the production loop and its contracts. A live comparison between clean and
+trained production agents remains a separate demonstration that this report does not replace.
 
 <a id="learning"></a>
 
-## Как происходит обучение
+## How learning works
 
 <p align="center">
-  <img src="docs/assets/hackathon/learning-loop.svg" alt="Цикл: запуск задачи, сохранение результата, оценка и обратная связь, формирование уроков, пробные запуски, принятие или отклонение" width="100%" />
+  <img src="docs/assets/hackathon/learning-loop.svg" alt="Loop: run the task, save the result, evaluate and collect feedback, derive lessons, run a trial, then accept or reject" width="100%" />
 </p>
 
-1. **Выполнить задачу.** Запуск получает зафиксированную версию уроков и работает с ней до конца.
-2. **Оценить результат.** После завершения сохраняются evidence и оценка. Технический сбой
-   не превращается в отрицательную оценку качества.
-3. **Найти повторяющуюся проблему.** Два отрицательных результата с одинаковым кодом проблемы
-   могут запустить рефлексию. Одного исправления владельца достаточно для более быстрого старта.
-4. **Предложить уроки.** Модель формирует короткий набор правил для этой задачи.
-   Код проверяет размер, содержимое, происхождение и актуальность кандидата.
-5. **Проверить в работе.** Кандидат проходит ограниченный trial. По результатам он заменяет
-   стабильные уроки или отклоняется; решения и основания сохраняются.
+1. **Run the task.** Each run receives a pinned version of its lessons and uses it through completion.
+2. **Evaluate the result.** Evidence and an evaluation are saved after completion. A technical
+   failure does not become a negative quality assessment.
+3. **Find a recurring problem.** Two negative results with the same issue code can trigger
+   reflection. A single owner correction is enough to start sooner.
+4. **Propose lessons.** The model produces a short set of rules for this task.
+   Code checks the candidate's size, content, provenance, and whether it is still current.
+5. **Test in practice.** The candidate enters a bounded trial. Depending on the results,
+   it replaces the stable lessons or is rejected; decisions and their supporting evidence are saved.
 
-**Обучение здесь — изменение памяти задачи.** Веса модели не меняются, fine-tuning не нужен.
-Версии уроков, оценки, обратная связь и решения живут в SQLite через GRDB.
-Внешний сервис памяти, включая xMemory, для этого не используется.
+**Learning here means updating a task's memory.** Model weights stay unchanged; no fine-tuning is needed.
+Lesson versions, evaluations, feedback, and decisions live in SQLite through GRDB.
+No external memory service, including xMemory, is used for this.
 
-Evaluator работает без инструментов и не видит текст уроков, кандидата и состояние trial.
-Reflector получает совместимые результаты, стабильные уроки и обратную связь владельца.
-Так оценка и предложение изменений остаются разными этапами.
+The evaluator has no tools and cannot see lesson text, the candidate, or trial state.
+The reflector receives compatible results, stable lessons, and owner feedback.
+This keeps evaluation and proposed changes as separate stages.
 
-## Когда урок становится постоянным
+## When a lesson becomes stable
 
 <p align="center">
-  <img src="docs/assets/hackathon/learning-policy.svg" alt="Ограниченная проверка кандидата: до трёх запусков, два положительных результата для принятия, один отрицательный результат для отклонения, возможность отката" width="100%" />
+  <img src="docs/assets/hackathon/learning-policy.svg" alt="Bounded candidate trial: up to three runs, two positive results to accept, one negative result to reject, with rollback available" width="100%" />
 </p>
 
-| Правило `scheduled-learning/v1` | Зачем оно нужно |
+| `scheduled-learning/v1` rule | Purpose |
 |---|---|
-| Последние **5 совместимых оценок за 30 дней** | Не смешивать результаты разных условий задачи |
-| До **3 уроков**, каждый до **512 UTF-8 байт** | Сохранять компактный опыт для следующих запусков |
-| Один trial на задачу, до **3 созданных запусков** | Ограничивать воздействие непроверенного изменения |
-| **2 положительных** результата, без отрицательных и veto | Принимать кандидата только после разрешения всех назначенных запусков |
-| **1 отрицательный** результат или hard veto | Завершать trial, сохраняя прежние стабильные уроки |
-| **30 дней** на назначения, **37 дней** на решение | Завершать trial даже при паузах и недостающих оценках |
+| Last **5 compatible evaluations within 30 days** | Avoid mixing results from different task conditions |
+| Up to **3 lessons**, each up to **512 UTF-8 bytes** | Keep experience compact for future runs |
+| One trial per task, up to **3 created runs** | Limit exposure to an unproven change |
+| **2 positive** results, no negatives or vetoes | Accept the candidate only after all assigned runs resolve |
+| **1 negative** result or a hard veto | End the trial while keeping the previous stable lessons |
+| **30 days** for assignments, **37 days** for a decision | Close trials even with pauses and missing evaluations |
 
-Указанные сроки — верхние пределы: при достаточных результатах trial завершается раньше.
+These deadlines are upper limits: a trial ends earlier when sufficient results are available.
 
-В Telegram владелец может отметить результат **Useful / Not useful**, внести исправление через
-**Correct it**, оспорить оценку, отредактировать или отклонить кандидата и откатить promotion.
-Одобрение кандидата не считается положительным результатом запуска.
+In Telegram, the owner can mark a result **Useful / Not useful**, provide a correction through
+**Correct it**, dispute an evaluation, edit or reject a candidate, and roll back a promotion.
+Approving a candidate does not count as a positive run result.
 
-Уроки входят в контекст как недоверенные данные. Они не могут менять расписание, адресатов,
-модель, бюджеты или разрешения инструментов. Существующие policy engine и approval controls
-продолжают действовать. Решение о promotion эвристическое; наличие подтверждений владельца
-записывается отдельно.
+Lessons enter context as untrusted data. They cannot change the schedule, recipients,
+model, budgets, or tool permissions. The existing policy engine and approval controls
+remain in force. Promotion is a heuristic decision; owner confirmations
+are recorded separately.
 
 <a id="architecture"></a>
 
-## Как это устроено
+## How it is built
 
 <p align="center">
-  <img src="docs/assets/hackathon/architecture.svg" alt="Telegram связан со Swift-демоном: gateway и scheduler запускают агент, learning workflow использует общие протоколы, LLM и хранилище GRDB с SQLite" width="100%" />
+  <img src="docs/assets/hackathon/architecture.svg" alt="Telegram connects to the Swift daemon: the gateway and scheduler run the agent, while the learning workflow uses shared protocols, the LLM, and GRDB with SQLite" width="100%" />
 </p>
 
-**`clawd` — один демон на Swift 6 со strict concurrency**, который работает на macOS и Linux.
-Telegram служит интерфейсом владельца; модели доступны через настраиваемый provider route.
-Состояние хранится локально, секреты шифруются на диске.
+**`clawd` is a single Swift 6 daemon with strict concurrency**, running on macOS and Linux.
+Telegram is the owner's interface; models are accessed through a configurable provider route.
+State stays local, and secrets are encrypted on disk.
 
-| Часть системы | Ответственность | Код |
+| Component | Responsibility | Code |
 |---|---|---|
-| `ClawCore` | Протоколы и типы: задачи, evidence, уроки, trial и решения | [Learning domain](Sources/ClawCore/Domain/Learning) |
-| `ClawAgent` | Выполнение задачи, контекст с закреплёнными уроками, LLM и инструменты | [Agent runtime](Sources/ClawAgent) |
-| `ClawGateway` | Telegram, расписания, обратная связь и координация learning workflow | [Learning services](Sources/ClawGateway/Services/Learning) |
-| `ClawData` | Транзакции, версии уроков, доказательства, promotion, rollback и retention | [Learning store](Sources/ClawData/Stores/Learning) |
+| `ClawCore` | Protocols and types: tasks, evidence, lessons, trials, and decisions | [Learning domain](Sources/ClawCore/Domain/Learning) |
+| `ClawAgent` | Task execution, context with pinned lessons, LLM calls, and tools | [Agent runtime](Sources/ClawAgent) |
+| `ClawGateway` | Telegram, schedules, feedback, and learning workflow coordination | [Learning services](Sources/ClawGateway/Services/Learning) |
+| `ClawData` | Transactions, lesson versions, evidence, promotion, rollback, and retention | [Learning store](Sources/ClawData/Stores/Learning) |
 
-Домен и протоколы отделены от реализаций, зависимости собираются в корне `clawd`.
-Фиксация уроков на запуске, атомарные переходы и восстановление состояния обеспечивают
-предсказуемую работу при конкурентных событиях и перезапусках.
+Domain types and protocols are separate from implementations; dependencies are assembled at the
+`clawd` root. Pinning lessons to each run, atomic transitions, and state recovery provide
+predictable behavior across concurrent events and restarts.
 
-**Экспериментальный контроллер написан на Python** и отделён от Swift-демона. Он задаёт
-фиксированные данные, порядок прогонов и детерминированный scorer. Эталонные ответы
-не передаются агенту вместе с заданием.
-[Архитектура](docs/ARCHITECTURE.md) · [Спецификация алгоритма][algorithm] · [Протокол M3][protocol]
+**The experiment controller is written in Python** and is separate from the Swift daemon. It defines
+fixed data, run order, and a deterministic scorer. Reference answers
+are not passed to the agent with the task.
+[Architecture](docs/ARCHITECTURE.md) · [Algorithm specification][algorithm] · [M3 protocol][protocol]
 
 <a id="run"></a>
 
-## Запустить хакатонную версию
+## Run the hackathon version
 
-Нужны **Swift 6.3**, macOS 15+ или Linux, Telegram-бот и доступ к LLM.
-На Linux для сборки установите `libsqlite3-dev`. Собирайте этот репозиторий из `main`:
+You need **Swift 6.3**, macOS 15+ or Linux, a Telegram bot, and LLM access.
+On Linux, install `libsqlite3-dev` to build. Build this repository from `main`:
 
 ```bash
 git clone https://github.com/podlodka-ai-club/sharpening.git
@@ -166,17 +166,17 @@ swift build -c release
 export PATH="$PWD/.build/release:$PATH"
 ```
 
-[Настройте бота по инструкции](docs/GETTING_STARTED.md#2-configure): скопируйте конфигурацию
-из `.env.example`, укажите Telegram token и LLM route, запечатайте секреты и добавьте свой
-Telegram ID в `CLAW_ALLOWLIST`. Полный onboarding описывает каждый шаг.
+[Follow the bot setup guide](docs/GETTING_STARTED.md#2-configure): copy the configuration
+from `.env.example`, set the Telegram token and LLM route, seal your secrets, and add your
+Telegram ID to `CLAW_ALLOWLIST`. The full onboarding guide explains each step.
 
-В `~/.swift-claw/clawd.env` включите обучение:
+Enable learning in `~/.swift-claw/clawd.env`:
 
 ```bash
 CLAW_LEARNING_ENABLED=true
 ```
 
-Загрузите конфигурацию в shell и запустите демон:
+Load the configuration into your shell and start the daemon:
 
 ```bash
 set -a && source ~/.swift-claw/clawd.env && set +a
@@ -184,37 +184,37 @@ clawd doctor --check-config
 clawd run
 ```
 
-Learning выключен по умолчанию; изменение настройки требует перезапуска.
-Вычисления evaluator и reflector используют настроенную модель и общие лимиты расходов,
-включая лимит фоновых задач.
-Для обучения используйте личный диалог владельца с ботом.
+Learning is off by default; changing the setting requires a restart.
+Evaluator and reflector calls use the configured model and shared spending limits,
+including the background-task budget.
+Use the owner's private chat with the bot for learning.
 
-### Попробовать цикл в Telegram
+### Try the loop in Telegram
 
-1. Создайте повторяющуюся задачу через `/schedule <описание задачи и расписания>`
-   и подтвердите её. `/schedule list` покажет `jobId`.
-2. Выполните `/runnow <jobId>`, нажмите **Correct it** под результатом
-   и ответьте, что нужно изменить.
-3. Откройте `/learning <jobId>`, чтобы увидеть уроки и состояние trial.
-4. Выполните следующие запуски через `/runnow <jobId>` и оцените результаты.
-   Положительные и отрицательные оценки участвуют в решении по правилам выше.
-5. После promotion кнопка **Roll back promotion** возвращает предыдущий набор уроков.
-   `/learning reset <jobId>` с подтверждением начинает новую эпоху с пустым набором.
+1. Create a recurring task with `/schedule <task and schedule description>`
+   and confirm it. `/schedule list` shows the `jobId`.
+2. Run `/runnow <jobId>`, tap **Correct it** below the result,
+   and reply with what should change.
+3. Open `/learning <jobId>` to inspect lessons and trial state.
+4. Run subsequent attempts with `/runnow <jobId>` and rate their results.
+   Positive and negative assessments inform the decision under the rules above.
+5. After promotion, **Roll back promotion** restores the previous lesson set.
+   `/learning reset <jobId>`, with confirmation, starts a new epoch with an empty set.
 
-Это ручной сценарий знакомства с production loop. Записанные измерения M3 доступны
-[отдельно][report]. Reset прекращает активное использование уроков, сохраняя историю.
+This is a manual introduction to the production loop. Recorded M3 measurements are available
+[separately][report]. Reset stops active use of lessons while preserving history.
 
-## Документация и материалы
+## Documentation and evidence
 
-| Что посмотреть | Ссылка |
+| What to explore | Link |
 |---|---|
-| Ход работы и текущий статус | [Основная задача #1](https://github.com/podlodka-ai-club/sharpening/issues/1) · [Dashboard][dashboard] |
-| Исходный эксперимент и результаты | [Протокол][protocol] · [Парные проверки][pairs] · [Финальный отчёт][report] |
-| Production learning: дизайн и приёмка | [Design][production-design] · [M4: 15 критериев][acceptance] |
-| Настройка, обучение и команды владельца | [Getting started](docs/GETTING_STARTED.md) · [Customization](docs/CUSTOMIZATION.md#scheduled-learning) |
-| Остальные возможности swift-claw | [Обзор продукта](docs/PRD.md) · [Архитектура](docs/ARCHITECTURE.md) |
-| Установка сервиса и локальная разработка | [Install](docs/INSTALL.md) · [Local development](docs/LOCAL_DEV.md) · [Testing](docs/TESTING.md) |
-| Безопасность и участие в разработке | [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) |
+| Progress and current status | [Parent issue #1](https://github.com/podlodka-ai-club/sharpening/issues/1) · [Dashboard][dashboard] |
+| Original experiment and results | [Protocol][protocol] · [Paired checks][pairs] · [Final report][report] |
+| Production learning: design and acceptance | [Design][production-design] · [M4: 15 criteria][acceptance] |
+| Setup, learning, and owner commands | [Getting started](docs/GETTING_STARTED.md) · [Customization](docs/CUSTOMIZATION.md#scheduled-learning) |
+| Other swift-claw capabilities | [Product overview](docs/PRD.md) · [Architecture](docs/ARCHITECTURE.md) |
+| Service installation and local development | [Install](docs/INSTALL.md) · [Local development](docs/LOCAL_DEV.md) · [Testing](docs/TESTING.md) |
+| Security and contributing | [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) |
 
 [MIT](LICENSE) © Ivan Magda
 

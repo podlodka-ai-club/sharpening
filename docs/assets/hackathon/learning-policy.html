@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Алгоритм принятия уроков</title>
+<title>Lesson activation policy</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500&amp;family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
 <style>*,*::before,*::after{box-sizing:border-box}body{margin:0;background:#F7F5EF;color:#252922;font-family:'Manrope',Arial,sans-serif}main{width:960px;max-width:100%;margin:auto}svg{display:block;width:100%;height:auto}</style>
 </head>
 <body>
 <main>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 816" width="960" height="816" role="img" aria-labelledby="learning-policy-title learning-policy-desc">
-<title id="learning-policy-title">Когда кандидат становится активным уроком</title>
-<desc id="learning-policy-desc">Исправление владельца или повторяющаяся ошибка запускает рефлексию. Проверенный кандидат получает до трёх запусков. Два положительных результата без отрицательных позволяют активацию; veto или отрицательный исход сохраняет прежний набор.</desc>
+<title id="learning-policy-title">When a candidate becomes an active lesson</title>
+<desc id="learning-policy-desc">An owner correction or recurring error triggers reflection. An admitted candidate gets up to three trial runs. At least two positive runs, no negatives or vetoes, and all assigned outcomes resolved allow activation; a negative or veto preserves the prior set.</desc>
 <defs>
 <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
 <polygon points="0 0, 8 3, 0 6" fill="#596056"/>
@@ -25,8 +25,8 @@
 </defs>
 <rect x="0" y="0" width="960" height="816" rx="0" fill="#F7F5EF" stroke="none" />
 <text x="40" y="40" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#C44D1F" text-anchor="start" letter-spacing="1">02 / LEARNING POLICY</text>
-<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Урок нужно заслужить</text>
-<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Последние 5 совместимых stable-оценок за 30 дней. Один открытый trial на задачу.</text>
+<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >A lesson must earn its place</text>
+<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Last 5 compatible stable-run evaluations within 30 days. One open trial per task.</text>
 <path class="connector" d="M 256 244 V 260 Q 256 268 264 268 H 460 Q 468 268 468 276 V 292" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 704 244 V 276 Q 704 284 696 284 H 508 Q 500 284 500 292" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 480 384 V 424" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
@@ -35,50 +35,50 @@
 <path class="connector" d="M 360 604 H 220 Q 212 604 212 612 V 656" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 480 656 V 692" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <rect x="648.0" y="572" width="40" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
-<text x="668" y="588" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >ДА</text>
+<text x="668" y="588" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >YES</text>
 <rect x="256.0" y="572" width="72" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
-<text x="292" y="588" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >ОТКАЗ</text>
+<text x="292" y="588" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >REJECT</text>
 <rect x="488.0" y="660" width="80" height="24" rx="4" fill="#F7F5EF" stroke="none" class="arrow-label-mask"/>
-<text x="528" y="676" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >ЖДЁМ</text>
+<text x="528" y="676" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >PENDING</text>
 <g class="node" data-x="80" data-y="156" data-w="352" data-h="88">
 <rect x="80" y="156" width="352" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="96" y="188" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Одно исправление</text>
-<text x="96" y="216" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >от владельца</text>
+<text x="96" y="188" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >One correction</text>
+<text x="96" y="216" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >from the owner</text>
 </g>
 <g class="node" data-x="528" data-y="156" data-w="352" data-h="88">
 <rect x="528" y="156" width="352" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="544" y="188" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Повторяющаяся ошибка</text>
-<text x="544" y="216" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >2 разных запуска · один issue code</text>
+<text x="544" y="188" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >A recurring error</text>
+<text x="544" y="216" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >2 distinct runs · same issue code</text>
 </g>
 <g class="node" data-x="292" data-y="292" data-w="376" data-h="92">
 <rect x="292" y="292" width="376" height="92" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="308" y="324" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Рефлексия → проверка кандидата</text>
-<text x="308" y="352" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >До 3 уроков · по 512 UTF-8 байт</text>
+<text x="308" y="324" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Reflect → validate the candidate</text>
+<text x="308" y="352" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Up to 3 lessons · 512 UTF-8 bytes each</text>
 </g>
 <g class="node" data-x="292" data-y="424" data-w="376" data-h="88">
 <rect x="292" y="424" width="376" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="308" y="456" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Ограниченное испытание</text>
-<text x="308" y="484" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >До 3 запусков · прежняя база сохранена</text>
+<text x="308" y="456" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >A bounded trial</text>
+<text x="308" y="484" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Up to 3 runs · prior stable set retained</text>
 </g>
 <g class="node" data-x="360" data-y="552" data-w="240" data-h="104">
 <path d="M 480 552 L 600 604 L 480 656 L 360 604 Z" fill="#FFFEFA" stroke="#596056"/>
-<text x="480" y="600" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="700" fill="#252922" text-anchor="middle" >Итог испытания?</text>
+<text x="480" y="600" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="700" fill="#252922" text-anchor="middle" >Trial outcome?</text>
 <text x="480" y="624" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="middle" >2+ / 0− / no veto</text>
 </g>
 <g class="node" data-x="52" data-y="656" data-w="320" data-h="80">
 <rect x="52" y="656" width="320" height="80" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="68" y="688" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Сохранить прежний набор</text>
-<text x="68" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >ошибка, veto или дедлайн</text>
+<text x="68" y="688" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Keep the prior set</text>
+<text x="68" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >negative, veto or deadline</text>
 </g>
 <g class="node" data-x="588" data-y="656" data-w="320" data-h="80">
 <rect x="588" y="656" width="320" height="80" rx="8" fill="#FBE9DC" stroke="#C44D1F" />
-<text x="604" y="688" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Активировать новый набор</text>
-<text x="604" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >все исходы разрешены</text>
+<text x="604" y="688" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Activate the candidate</text>
+<text x="604" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >all assigned outcomes resolved</text>
 </g>
 <rect x="412" y="692" width="136" height="44" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="480" y="720" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="middle" >Ждать</text>
+<text x="480" y="720" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="middle" >Wait</text>
 <line x1="40" y1="756" x2="920" y2="756" stroke="#DADCD2"/>
-<text x="40" y="784" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >Положительные оценки — эвристика, не гарантия качества.</text>
+<text x="40" y="784" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >Positive ratings are a heuristic, not a guarantee of quality.</text>
 <text x="920" y="784" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="end" >LLM proposes · Swift decides</text>
 </svg>
 </main>

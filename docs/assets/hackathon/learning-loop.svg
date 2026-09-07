@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 800" width="960" height="800" role="img" aria-labelledby="learning-loop-title learning-loop-desc">
-<title id="learning-loop-title">Как результат превращается в опыт</title>
-<desc id="learning-loop-desc">Подходящие завершённые запуски дают факты для оценки; при сигнале возникает кандидат, который проходит ограниченное испытание. Решение определяет уроки следующих запусков.</desc>
+<title id="learning-loop-title">How results become experience</title>
+<desc id="learning-loop-desc">Eligible completed runs provide evidence for evaluation. A learning signal can produce a candidate for a bounded trial. The decision determines the lessons used in future runs.</desc>
 <defs>
 <style>@font-face {
   font-family: 'IBM Plex Mono';
@@ -55,8 +55,8 @@
 </defs>
 <rect x="0" y="0" width="960" height="800" rx="0" fill="#F7F5EF" stroke="none" />
 <text x="40" y="40" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#C44D1F" text-anchor="start" letter-spacing="1">01 / LEARNING LOOP</text>
-<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Следующий запуск начинается с опыта</text>
-<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Модель предлагает уроки. Swift-код управляет их допуском, испытанием и активацией.</text>
+<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Every run starts with experience</text>
+<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >The model proposes lessons. Swift code controls admission, trials and activation.</text>
 <path class="connector" d="M 584.000 222.134 A 220 220 0 0 1 638.007 262.919" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 480.000 240.000 L 480.000 366.000" fill="none" stroke="#71796D" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
 <path class="connector" d="M 690.485 352.000 A 220 220 0 0 1 690.917 478.563" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
@@ -71,41 +71,41 @@
 <path class="connector" d="M 369.149 352.000 L 398.594 369.000" fill="none" stroke="#71796D" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
 <g class="node" data-x="376" data-y="152" data-w="208" data-h="88">
 <rect x="376" y="152" width="208" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="392" y="184" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Выполнить задачу</text>
-<text x="392" y="212" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >с версией уроков</text>
+<text x="392" y="184" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Run the task</text>
+<text x="392" y="212" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >with pinned lessons</text>
 </g>
 <g class="node" data-x="568" data-y="264" data-w="208" data-h="88">
 <rect x="568" y="264" width="208" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="584" y="296" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Сохранить факты</text>
-<text x="584" y="324" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >после завершения</text>
+<text x="584" y="296" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Seal the evidence</text>
+<text x="584" y="324" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >after the run settles</text>
 </g>
 <g class="node" data-x="568" data-y="480" data-w="208" data-h="88">
 <rect x="568" y="480" width="208" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="584" y="512" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Оценить запуск</text>
-<text x="584" y="540" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >вслепую, без tools</text>
+<text x="584" y="512" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Evaluate the run</text>
+<text x="584" y="540" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >blind, without tools</text>
 </g>
 <g class="node" data-x="376" data-y="592" data-w="208" data-h="88">
 <rect x="376" y="592" width="208" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="392" y="624" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Предложить урок</text>
-<text x="392" y="652" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >только при сигнале</text>
+<text x="392" y="624" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Propose lessons</text>
+<text x="392" y="652" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >only when triggered</text>
 </g>
 <g class="node" data-x="184" data-y="480" data-w="208" data-h="88">
 <rect x="184" y="480" width="208" height="88" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="200" y="512" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Испытать уроки</text>
-<text x="200" y="540" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >не более 3 запусков</text>
+<text x="200" y="512" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Test the candidate</text>
+<text x="200" y="540" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >at most 3 runs</text>
 </g>
 <g class="node" data-x="184" data-y="264" data-w="208" data-h="88">
 <rect x="184" y="264" width="208" height="88" rx="8" fill="#FBE9DC" stroke="#C44D1F" />
-<text x="200" y="296" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Принять решение</text>
-<text x="200" y="324" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >выбрать набор уроков</text>
+<text x="200" y="296" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Make a decision</text>
+<text x="200" y="324" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >choose the lesson set</text>
 </g>
 <g class="node" data-x="368" data-y="372" data-w="224" data-h="88">
 <rect x="368" y="372" width="224" height="88" rx="8" fill="#252922" stroke="#DADCD2" />
-<text x="384" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#F7F5EF" text-anchor="start" >Память задачи</text>
-<text x="384" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#DADCD2" text-anchor="start" >SQLite · версии · факты</text>
+<text x="384" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#F7F5EF" text-anchor="start" >Task memory</text>
+<text x="384" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#DADCD2" text-anchor="start" >SQLite · versions · evidence</text>
 </g>
-<text x="480" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="middle" >Нет сигнала к обучению — текущий набор уроков сохраняется.</text>
+<text x="480" y="716" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="middle" >Without a learning signal, the current lesson set stays in place.</text>
 <line x1="40" y1="740" x2="920" y2="740" stroke="#DADCD2"/>
-<text x="40" y="768" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >Сплошная линия — цикл · пунктир — запись в память задачи</text>
+<text x="40" y="768" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >Solid line: work cycle · dashed line: write to task memory</text>
 <text x="920" y="768" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="end" >scheduled-learning/v1</text>
 </svg>

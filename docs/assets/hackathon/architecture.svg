@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 736" width="960" height="736" role="img" aria-labelledby="architecture-title architecture-desc">
-<title id="architecture-title">Два контура одного ассистента</title>
-<desc id="architecture-desc">Telegram управляет агентом, планировщик запускает регулярные задачи. Agent runtime вызывает LLM и инструменты, затем передаёт завершённые факты фоновому learning workflow. SQLite хранит уроки и решения, которые читает следующий запуск.</desc>
+<title id="architecture-title">Two paths, one assistant</title>
+<desc id="architecture-desc">Telegram controls the agent and the scheduler fires recurring tasks. The agent runtime calls the LLM and tools, then notifies the background learning workflow after evidence settles. SQLite stores lessons and decisions for future runs.</desc>
 <defs>
 <style>@font-face {
   font-family: 'IBM Plex Mono';
@@ -55,8 +55,8 @@
 </defs>
 <rect x="0" y="0" width="960" height="736" rx="0" fill="#F7F5EF" stroke="none" />
 <text x="40" y="40" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#C44D1F" text-anchor="start" letter-spacing="1">03 / ARCHITECTURE</text>
-<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Ответ сейчас. Обучение — следом.</text>
-<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Один Swift-демон на вашей машине. Learning не задерживает доставку результата.</text>
+<text x="40" y="84" font-family="'Literata',Georgia,serif" font-size="32" font-weight="500" fill="#252922" text-anchor="start" >Deliver first. Learn in the background.</text>
+<text x="40" y="116" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >One Swift daemon on your machine. Learning does not delay the primary response.</text>
 <path class="connector" d="M 248 228 H 288" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 248 420 H 256 Q 264 420 264 412 V 260 Q 264 252 272 252 H 288" fill="none" stroke="#596056" stroke-width="1.5" marker-end="url(#arrow)"/>
 <path class="connector" d="M 648 228 H 736" fill="none" stroke="#3E6770" stroke-width="1.5" marker-end="url(#arrow-link)"/>
@@ -75,27 +75,27 @@
 <g class="node" data-x="64" data-y="196" data-w="184" data-h="96">
 <rect x="64" y="196" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
 <text x="80" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Telegram</text>
-<text x="80" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >задачи и ответы</text>
+<text x="80" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >tasks and responses</text>
 </g>
 <g class="node" data-x="288" data-y="196" data-w="360" data-h="96">
 <rect x="288" y="196" width="360" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
 <text x="304" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Agent runtime</text>
-<text x="304" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >контекст scheduled-запуска</text>
-<text x="304" y="276" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >точная версия уроков</text>
+<text x="304" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >context for each scheduled run</text>
+<text x="304" y="276" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >pinned lesson version</text>
 </g>
 <g class="node" data-x="736" data-y="196" data-w="184" data-h="96">
 <rect x="736" y="196" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
 <text x="752" y="228" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >LLM provider</text>
-<text x="752" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >модель и маршрут</text>
+<text x="752" y="256" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >model and route</text>
 </g>
 <g class="node" data-x="64" data-y="372" data-w="184" data-h="96">
 <rect x="64" y="372" width="184" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="80" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Планировщик</text>
+<text x="80" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Scheduler</text>
 <text x="80" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >claim / fire</text>
 </g>
 <g class="node" data-x="288" data-y="372" data-w="176" data-h="96">
 <rect x="288" y="372" width="176" height="96" rx="8" fill="#FFFEFA" stroke="#DADCD2" />
-<text x="304" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Инструменты</text>
+<text x="304" y="404" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#252922" text-anchor="start" >Tools</text>
 <text x="304" y="432" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >policy gate</text>
 </g>
 <g class="node" data-x="512" data-y="372" data-w="408" data-h="112">
@@ -107,10 +107,10 @@
 <g class="node" data-x="288" data-y="548" data-w="632" data-h="96">
 <rect x="288" y="548" width="632" height="96" rx="8" fill="#252922" stroke="#DADCD2" />
 <text x="304" y="580" font-family="'Manrope',Arial,sans-serif" font-size="20" font-weight="700" fill="#F7F5EF" text-anchor="start" >SQLite + GRDB</text>
-<text x="304" y="608" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#DADCD2" text-anchor="start" >уроки задачи · версии · факты · решения · происхождение</text>
+<text x="304" y="608" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#DADCD2" text-anchor="start" >task lessons · versions · evidence · decisions · provenance</text>
 </g>
-<text x="40" y="664" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Уроки остаются недоверенными данными. Права инструментов задаёт код.</text>
+<text x="40" y="664" font-family="'Manrope',Arial,sans-serif" font-size="16" font-weight="400" fill="#596056" text-anchor="start" >Lessons remain untrusted data. Tool permissions are enforced in code.</text>
 <line x1="40" y1="676" x2="920" y2="676" stroke="#DADCD2"/>
-<text x="40" y="704" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >ClawCore — контракты; clawd — сборка компонентов.</text>
+<text x="40" y="704" font-family="'Manrope',Arial,sans-serif" font-size="12" font-weight="400" fill="#596056" text-anchor="start" >ClawCore defines contracts; clawd composes implementations.</text>
 <text x="920" y="704" font-family="'IBM Plex Mono',monospace" font-size="12" font-weight="500" fill="#596056" text-anchor="end" >Swift 6 · async / await</text>
 </svg>
