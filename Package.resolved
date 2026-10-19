@@ -1,13 +1,13 @@
 {
-  "originHash" : "6a2f9344279dc8ce24e3d6d69cb9c5fe9dcb4f48ab7bb9c02ca5c8650b3a924f",
+  "originHash" : "b7a82cdb0ce08ba53b00aa0d15c787c2e1a72c1c8e207e64f3f8a8af267a6b6e",
   "pins" : [
     {
       "identity" : "async-http-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
       "state" : {
-        "revision" : "9544287b9416c0bc71e58b9f3aead8dd14b16103",
-        "version" : "1.36.0"
+        "revision" : "4c005f955e83f888d5616e579717a36d2dfc6301",
+        "version" : "1.36.2"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattt/eventsource.git",
       "state" : {
-        "revision" : "a3a85a85214caf642abaa96ae664e4c772a59f6e",
-        "version" : "1.4.1"
+        "revision" : "86b5096ac59ab46e66bd1f6377c604bc1dab0bc2",
+        "version" : "1.5.1"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "47d3869a7291f085c1fb9fb1e6d3b97a793f45c6",
-        "version" : "4.5.1"
+        "revision" : "da9d28d69ebe3894b18376c8f2395c2f37b8448f",
+        "version" : "4.5.2"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "3ffafb9722d5d918c614feb496c8789a3b59d222",
-        "version" : "1.15.0"
+        "revision" : "4038b6a4f74a1426f47eb1dd5b4bb5628a15d597",
+        "version" : "1.16.1"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "0b18836bd8b0162e7e17a995a3fbee20ed8f3b2b",
-        "version" : "2.101.3"
+        "revision" : "6db9d9abd92ad7399b8a564cafbb87d3507245fa",
+        "version" : "2.104.0"
       }
     },
     {
@@ -222,8 +222,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/swift-service-lifecycle.git",
       "state" : {
-        "revision" : "9829955b385e5bb88128b73f1b8389e9b9c3191a",
-        "version" : "2.11.0"
+        "revision" : "c55297914e26ce3085b73ca88c521ef99136f6ad",
+        "version" : "2.12.1"
       }
     },
     {
@@ -231,8 +231,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-subprocess.git",
       "state" : {
-        "revision" : "b3937ab85dd32f6e9435914599c1519074769c1a",
-        "version" : "1.0.0"
+        "revision" : "55d30558b8b12c0343793421328fe81a4919c776",
+        "version" : "1.0.1"
       }
     },
     {
@@ -240,8 +240,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
       "state" : {
-        "revision" : "704705c5c51156ede21172a38654d522ce487074",
-        "version" : "1.8.0"
+        "revision" : "869129b7bf4ecc57b97d0193ad29690ca2134750",
+        "version" : "1.8.1"
       }
     },
     {
